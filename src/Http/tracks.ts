@@ -109,7 +109,7 @@ export class Tracks {
 
 		await track.save();
 		// wait until audio has finished transcodig... probably not the best way of doing it
-		if (track.path.toString().endsWith(".flac") && context.query.transcode) {
+		if (track.path.toString().endsWith(".flac") && context.query.transcode == "true") {
 			if (!context.query.compression) context.query.compression = 3
 			track.path = await LibraryService.instance.transcode(track as any, {
 				output: {
@@ -118,7 +118,11 @@ export class Tracks {
 				}
 			});
 			filetype = "ogg"
+			console.log("transcoding")
 		}
+		else{console.log("not transcoding")}
+
+		console.log(track.path)
 
 		const stat = statSync(track.path);
 
