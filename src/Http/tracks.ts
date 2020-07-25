@@ -118,11 +118,7 @@ export class Tracks {
 				}
 			});
 			filetype = "ogg"
-			console.log("transcoding")
 		}
-		else{console.log("not transcoding")}
-
-		console.log(track.path)
 
 		const stat = statSync(track.path);
 
