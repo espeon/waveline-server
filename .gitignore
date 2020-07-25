@@ -1,4 +1,5 @@
 node_modules/
+
 dist/
 .art/
 .cache/
@@ -12,5 +13,6 @@ demo
 Deep
 transcoded-audio
 .env-docker
-.album-art/
+album-art/
 error_log.txt
+waveline.db

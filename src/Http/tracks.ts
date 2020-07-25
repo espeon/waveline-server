@@ -105,13 +105,19 @@ export class Tracks {
 		}
 		track.plays = parseInt(track.plays as any, 10) + 1;
 		track.last_play = new Date();
+		let filetype = track.path.toString().split(".").pop();
 
 		await track.save();
 		// wait until audio has finished transcodig... probably not the best way of doing it
 		if (track.path.toString().endsWith(".flac") && context.query.transcode) {
+			if (!context.query.compression) context.query.compression = 3
 			track.path = await LibraryService.instance.transcode(track as any, {
-				output: { type: "mp3" }
+				output: {
+					type: "ogg",
+					compression: context.query.compression
+				}
 			});
+			filetype = "ogg"
 		}
 
 		const stat = statSync(track.path);
@@ -128,7 +134,6 @@ export class Tracks {
 			const end = partialend ? partialend : total - 1;
 			const chunksize = (end - start) + 1;
 
-
 			context.status = 206;
 			context.headers = {
 				"Content-Range": "bytes " + start + "-" + end + "/" + total,
@@ -144,6 +149,11 @@ export class Tracks {
 				"Accept-Ranges": "bytes",
 				"Content-Length": stat.size,
 			};
+			
+			if(context.query.rename) context.headers = {
+				...context.headers,
+				"Content-Disposition": `filename="${track.name} - ${track.artist}.${filetype}"`,
+			}
 
 			return createReadStream(track.path);
 		}

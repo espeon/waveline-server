@@ -59,7 +59,7 @@ export class LibraryService {
 	 */
 	public transcode(track: Track, options: sox.SoxOptions): Promise<string> {
 		return new Promise((resolve, reject) => {
-			const audioFile = `${process.env.TRANSCODE_PATH}/${(track as any).id}.mp3`;
+			const audioFile = `${process.env.TRANSCODE_PATH}/${(track as any).id}-${options.output.compression}.${options.output.type}`;
 
 			if (existsSync(audioFile)) {
 				return resolve(audioFile);
